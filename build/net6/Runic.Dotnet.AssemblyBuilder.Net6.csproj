@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AssemblyName>Runic.Dotnet.AssemblyBuilder</AssemblyName>
+    <RootNamespace>Runic.Dotnet.AssemblyBuilder</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Properties\**" />
+    <EmbeddedResource Remove="Properties\**" />
+    <None Remove="Properties\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\src\AssemblyBuilder.cs" Link="AssemblyBuilder.cs" />
+    <Compile Include="..\..\src\BlobStream.cs" Link="BlobStream.cs" />
+    <Compile Include="..\..\src\GUIDStream.cs" Link="GUIDStream.cs" />
+    <Compile Include="..\..\src\MetadataStream.cs" Link="MetadataStream.cs" />
+    <Compile Include="..\..\src\StringsStream.cs" Link="StringsStream.cs" />
+    <Compile Include="..\..\src\TextSection.cs" Link="TextSection.cs" />
+    <Compile Include="..\..\src\USStream.cs" Link="USStream.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Runic.Dotnet.Assembly" Version="1.0.5" />
+    <PackageReference Include="Runic.FileFormats.PortableExecutable" Version="1.0.2" />
+  </ItemGroup>
+</Project>

@@ -23,6 +23,8 @@
  */
 
 using Runic.FileFormats;
+using System;
+using System.Collections.Generic;
 using static Runic.Dotnet.Assembly;
 using static Runic.Dotnet.AssemblyBuilder;
 using static Runic.FileFormats.PortableExecutable.Directories;
@@ -53,7 +55,11 @@ namespace Runic.Dotnet
         {
             return _metadataStream.ParamTable.Add(parameterAttributes, _stringsStream.AddString(parameterName), sequence);
         }
+#if NET6_0_OR_GREATER
         public Assembly.MetadataTable.MethodDefTable.MethodDefTableRow AddMethod(string methodName, byte[] methodSignature, MethodAttributes methodAttributes, MethodImplAttributes methodImplAttributes, Assembly.MetadataTable.ParamTable.ParamTableRow? parameters)
+#else
+        public Assembly.MetadataTable.MethodDefTable.MethodDefTableRow AddMethod(string methodName, byte[] methodSignature, MethodAttributes methodAttributes, MethodImplAttributes methodImplAttributes, Assembly.MetadataTable.ParamTable.ParamTableRow parameters)
+#endif
         {
             return _metadataStream.MethodDefTable.Add(_stringsStream.AddString(methodName), _blobStream.AddBlob(methodSignature), methodAttributes, methodImplAttributes, 0, parameters);
         }
@@ -70,7 +76,11 @@ namespace Runic.Dotnet
             _textData.AddRange(bytecode);
             method.MethodBodyRelativeVirtualAddress = rva;
         }
+#if NET6_0_OR_GREATER
         public Assembly.MetadataTable.TypeDefTable.TypeDefTableRow AddType(string typeName, string namespaceName, TypeAttributes attributes, Assembly.MetadataTable.ITypeDefOrRefOrSpec parentType, Assembly.MetadataTable.FieldTable.FieldTableRow? fields, Assembly.MetadataTable.MethodDefTable.MethodDefTableRow? methods)
+#else
+        public Assembly.MetadataTable.TypeDefTable.TypeDefTableRow AddType(string typeName, string namespaceName, TypeAttributes attributes, Assembly.MetadataTable.ITypeDefOrRefOrSpec parentType, Assembly.MetadataTable.FieldTable.FieldTableRow fields, Assembly.MetadataTable.MethodDefTable.MethodDefTableRow methods)
+#endif
         {
             return _metadataStream.TypeDefTable.Add(_stringsStream.AddString(typeName), _stringsStream.AddString(namespaceName), attributes, parentType, fields, methods);
         }

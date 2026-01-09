@@ -62,7 +62,7 @@ namespace Runic.Dotnet
             public MetadataStreamBuilder() : base(0, 0, "#~") { }
             public void Finalize(Runic.Dotnet.Assembly.Heap.StringHeap stringHeap, Runic.Dotnet.Assembly.Heap.BlobHeap blobHeap, Runic.Dotnet.Assembly.Heap.GUIDHeap guidHeap)
             {
-                using (System.IO.MemoryStream stream = new MemoryStream())
+                using (System.IO.MemoryStream stream = new System.IO.MemoryStream())
                 {
                     using (System.IO.BinaryWriter tableWriter = new System.IO.BinaryWriter(stream))
                     {

@@ -34,8 +34,16 @@ namespace Runic.Dotnet
     {
         internal class TextSection : Runic.FileFormats.PortableExecutable.Section
         {
+#if NET6_0_OR_GREATER
             byte[]? _data;
+#else
+            byte[] _data;
+#endif
+#if NET6_0_OR_GREATER
             public override byte[]? GetData()
+#else
+            public override byte[] GetData()
+#endif
             {
                 return _data;
             }
