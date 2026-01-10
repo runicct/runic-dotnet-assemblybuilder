@@ -84,6 +84,10 @@ namespace Runic.Dotnet
         {
             return _metadataStream.TypeDefTable.Add(_stringsStream.AddString(typeName), _stringsStream.AddString(namespaceName), attributes, parentType, fields, methods);
         }
+        public Assembly.MetadataTable.StandAloneSigTable.StandAloneSigTableRow AddStandAloneSignature(byte[] signature)
+        {
+            return _metadataStream.StandAloneSigTable.Add(_blobStream.AddBlob(signature));
+        }
         public Assembly.MetadataTable.AssemblyRefTable.AssemblyRefTableRow AddAssemblyReference(string Name, Version version,  byte[] publicKeyOrToken, string culture)
         {
             return _metadataStream.AssemblyRefTable.Add(version,  _blobStream.AddBlob(publicKeyOrToken), _stringsStream.AddString(Name), _stringsStream.AddString(culture));

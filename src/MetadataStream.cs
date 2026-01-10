@@ -56,6 +56,8 @@ namespace Runic.Dotnet
             public Assembly.MetadataTable.MemberRefTable MemberRefTable { get { return _memberRefTable; } }
             Assembly.MetadataTable.CustomAttributeTable _customAttributeTable = new Dotnet.Assembly.MetadataTable.CustomAttributeTable();
             public Assembly.MetadataTable.CustomAttributeTable CustomAttributeTable { get { return _customAttributeTable; } }
+            Assembly.MetadataTable.StandAloneSigTable _standaloneSigTable = new Dotnet.Assembly.MetadataTable.StandAloneSigTable();
+            public Assembly.MetadataTable.StandAloneSigTable StandAloneSigTable { get { return _standaloneSigTable; } }
             uint _size;
             public override uint Size { get { return ((_size + 3) / 4) * 4; } set { _size = value; } }
             byte[] _data;
@@ -66,7 +68,7 @@ namespace Runic.Dotnet
                 {
                     using (System.IO.BinaryWriter tableWriter = new System.IO.BinaryWriter(stream))
                     {
-                        Runic.Dotnet.Assembly.MetadataTable.Save(new MetadataTable[] { _assemblyRefTable, _fieldTable, _methodDefTable, _paramTable, _assemblyTable, _moduleTable, _typeDefTable, _typeRefTable, _memberRefTable, _customAttributeTable }, stringHeap, blobHeap, guidHeap, tableWriter);
+                        Runic.Dotnet.Assembly.MetadataTable.Save(new MetadataTable[] { _assemblyRefTable, _fieldTable, _methodDefTable, _paramTable, _assemblyTable, _moduleTable, _typeDefTable, _typeRefTable, _memberRefTable, _customAttributeTable, _standaloneSigTable }, stringHeap, blobHeap, guidHeap, tableWriter);
                     }
                     _data = stream.ToArray();
                     _size = (uint)_data.Length;
