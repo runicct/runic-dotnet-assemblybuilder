@@ -34,14 +34,20 @@ namespace Runic.Dotnet
     {
         internal class StringsStreamBuilder : Runic.Dotnet.Assembly.MetadataRoot.Stream
         {
+            Assembly.Heap.StringHeap.String _nullString;
             Runic.Dotnet.Assembly.Heap.StringHeap _heap = new Runic.Dotnet.Assembly.Heap.StringHeap(false, 0, 0);
             public Runic.Dotnet.Assembly.Heap.StringHeap Heap { get { return _heap; } }
             public override uint RelativeVirtualAddress { get { return _heap.RelativeVirtualAddress; } set { _heap.RelativeVirtualAddress = value; } }
             public override uint Size { get { return (((uint)_stringData.Count + 3) / 4) * 4; } set { } }
             Dictionary<string, uint> _strings = new Dictionary<string, uint>();
             List<byte> _stringData = new List<byte>();
+#if NET6_0_OR_GREATER
+            public Runic.Dotnet.Assembly.Heap.StringHeap.String AddString(string? str)
+#else
             public Runic.Dotnet.Assembly.Heap.StringHeap.String AddString(string str)
+#endif
             {
+                if (str == null) { return _nullString; }
                 uint existingIndex;
                 if (_strings.TryGetValue(str, out existingIndex))
                 {
@@ -56,6 +62,12 @@ namespace Runic.Dotnet
             }
             public StringsStreamBuilder() : base(0, 0, "#Strings") 
             {
+                {
+                    uint index = (uint)_stringData.Count;
+                    _stringData.Add(0);
+                    _heap.Size = (uint)_stringData.Count;
+                    _nullString = new Runic.Dotnet.Assembly.Heap.StringHeap.String(_heap, index);
+                }
                 AddString("");
             }
             public void Save(System.IO.BinaryWriter writer)

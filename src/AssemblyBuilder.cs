@@ -49,7 +49,7 @@ namespace Runic.Dotnet
             _metadataRoot = new Dotnet.Assembly.MetadataRoot(0, "v4.0.30319", new Dotnet.Assembly.MetadataRoot.Stream[] { _stringsStream, _GUIDStream, _blobStream, _metadataStream, _USStream });
             _metadataStream.AssemblyTable.Add(assemblyVersion, null, _stringsStream.AddString(assemblyName), _stringsStream.AddString(assemblyCulture));
             _metadataStream.ModuleTable.Add(_stringsStream.AddString(moduleName), _GUIDStream.AddGUID(moduleMvid));
-            _metadataStream.TypeDefTable.Add(_stringsStream.AddString("<Module>"), _stringsStream.AddString(""), 0, null, null, null);
+            _metadataStream.TypeDefTable.Add(_stringsStream.AddString("<Module>"), _stringsStream.AddString(null), 0, null, null, null);
         }
         public Assembly.MetadataTable.ParamTable.ParamTableRow AddParameter(string parameterName, ParamAttributes parameterAttributes, int sequence)
         {
@@ -63,6 +63,16 @@ namespace Runic.Dotnet
         {
             return _metadataStream.MethodDefTable.Add(_stringsStream.AddString(methodName), _blobStream.AddBlob(methodSignature), methodAttributes, methodImplAttributes, 0, parameters);
         }
+
+#if NET6_0_OR_GREATER
+        public Assembly.MetadataTable.MethodDefTable.MethodDefTableRow AddMethod(string methodName, MethodAttributes methodAttributes, MethodImplAttributes methodImplAttributes, Assembly.MetadataTable.ParamTable.ParamTableRow? parameters)
+#else
+        public Assembly.MetadataTable.MethodDefTable.MethodDefTableRow AddMethod(string methodName, MethodAttributes methodAttributes, MethodImplAttributes methodImplAttributes, Assembly.MetadataTable.ParamTable.ParamTableRow parameters)
+#endif
+        {
+            return _metadataStream.MethodDefTable.Add(_stringsStream.AddString(methodName), null, methodAttributes, methodImplAttributes, 0, parameters);
+        }
+
         public void SetMethodBody(Assembly.MetadataTable.MethodDefTable.MethodDefTableRow method, byte[] headerAndBytecode)
         {
             uint rva = (uint)_textData.Count;
@@ -76,6 +86,11 @@ namespace Runic.Dotnet
             _textData.AddRange(bytecode);
             method.MethodBodyRelativeVirtualAddress = rva;
         }
+        public void SetMethodSignature(Assembly.MetadataTable.MethodDefTable.MethodDefTableRow method, byte[] methodSignature)
+        {
+            method.Signature = _blobStream.AddBlob(methodSignature);
+        }
+
 #if NET6_0_OR_GREATER
         public Assembly.MetadataTable.TypeDefTable.TypeDefTableRow AddType(string typeName, string namespaceName, TypeAttributes attributes, Assembly.MetadataTable.ITypeDefOrRefOrSpec parentType, Assembly.MetadataTable.FieldTable.FieldTableRow? fields, Assembly.MetadataTable.MethodDefTable.MethodDefTableRow? methods)
 #else
@@ -83,6 +98,16 @@ namespace Runic.Dotnet
 #endif
         {
             return _metadataStream.TypeDefTable.Add(_stringsStream.AddString(typeName), _stringsStream.AddString(namespaceName), attributes, parentType, fields, methods);
+        }
+#if NET6_0_OR_GREATER
+        public Assembly.MetadataTable.TypeDefTable.TypeDefTableRow AddType(string typeName, Assembly.MetadataTable.TypeDefTable.TypeDefTableRow enclosingType, TypeAttributes attributes, Assembly.MetadataTable.ITypeDefOrRefOrSpec parentType, Assembly.MetadataTable.FieldTable.FieldTableRow? fields, Assembly.MetadataTable.MethodDefTable.MethodDefTableRow? methods)
+#else
+        public Assembly.MetadataTable.TypeDefTable.TypeDefTableRow AddType(string typeName, Assembly.MetadataTable.TypeDefTable.TypeDefTableRow enclosingType, TypeAttributes attributes, Assembly.MetadataTable.ITypeDefOrRefOrSpec parentType, Assembly.MetadataTable.FieldTable.FieldTableRow fields, Assembly.MetadataTable.MethodDefTable.MethodDefTableRow methods)
+#endif
+        {
+            Assembly.MetadataTable.TypeDefTable.TypeDefTableRow typedef = _metadataStream.TypeDefTable.Add(_stringsStream.AddString(typeName), _stringsStream.AddString(null), attributes, parentType, fields, methods);
+            _metadataStream.NestedClassTable.Add(typedef, enclosingType);
+            return typedef;
         }
         public Assembly.MetadataTable.StandAloneSigTable.StandAloneSigTableRow AddStandAloneSignature(byte[] signature)
         {
@@ -100,9 +125,25 @@ namespace Runic.Dotnet
         {
             return _metadataStream.MemberRefTable.Add(parent, _stringsStream.AddString(name), _blobStream.AddBlob(signature));
         }
+        public Assembly.MetadataTable.MemberRefTable.MemberRefTableRow AddMemberReference(Assembly.MetadataTable.IMemberRefParent parent, string name)
+        {
+            return _metadataStream.MemberRefTable.Add(parent, _stringsStream.AddString(name), null);
+        }
+        public void SetMemberReferenceSignature(Assembly.MetadataTable.MemberRefTable.MemberRefTableRow memberRef, byte[] signature)
+        {
+            memberRef.Signature = _blobStream.AddBlob(signature);
+        }
         public Assembly.MetadataTable.FieldTable.FieldTableRow AddField(FieldAttributes attributes, string fieldName, byte[] fieldSignature)
         {
             return _metadataStream.FieldTable.Add(attributes, _stringsStream.AddString(fieldName), _blobStream.AddBlob(fieldSignature));
+        }
+        public Assembly.MetadataTable.FieldTable.FieldTableRow AddField(FieldAttributes attributes, string fieldName)
+        {
+            return _metadataStream.FieldTable.Add(attributes, _stringsStream.AddString(fieldName), null);
+        }
+        public void SetFieldSignature(Assembly.MetadataTable.FieldTable.FieldTableRow field, byte[] fieldSignature)
+        {
+            field.Signature = _blobStream.AddBlob(fieldSignature);
         }
         public Assembly.MetadataTable.CustomAttributeTable.CustomAttributeTableRow AddCustomAttribute(Assembly.MetadataTable.IHasCustomAttribute parent, Assembly.MetadataTable.ICustomAttributeConstructor constructor, byte[] value)
         {

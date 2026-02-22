@@ -45,7 +45,7 @@ static string CreateNuspec(string packageId, string version, string description,
     stringBuilder.AppendLine("    <license type=\"expression\">MIT</license>");
     stringBuilder.AppendLine("    <licenseUrl>https://licenses.nuget.org/MIT</licenseUrl>");
     stringBuilder.AppendLine("    <dependencies>");
-    stringBuilder.AppendLine("        <dependency id=\"Runic.Dotnet.Assembly\" version=\"[1.0.5,)\" />");
+    stringBuilder.AppendLine("        <dependency id=\"Runic.Dotnet.Assembly\" version=\"[1.0.12,)\" />");
     stringBuilder.AppendLine("        <dependency id=\"Runic.FileFormats.PortableExecutable\" version=\"[1.0.2,)\" />");
     stringBuilder.AppendLine("    </dependencies>");
     stringBuilder.AppendLine("    <icon>runic_logo.png</icon>");

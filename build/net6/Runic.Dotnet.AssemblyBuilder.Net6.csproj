@@ -25,7 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Runic.Dotnet.Assembly" Version="1.0.5" />
+    <PackageReference Include="Runic.Dotnet.Assembly" Version="1.0.12" />
     <PackageReference Include="Runic.FileFormats.PortableExecutable" Version="1.0.2" />
   </ItemGroup>
 </Project>

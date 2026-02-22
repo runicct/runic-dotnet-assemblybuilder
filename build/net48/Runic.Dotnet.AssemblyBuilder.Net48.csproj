@@ -32,7 +32,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Runic.Dotnet.Assembly, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Runic.Dotnet.Assembly.1.0.5\lib\net4.8\Runic.Dotnet.Assembly.dll</HintPath>
+      <HintPath>..\..\packages\Runic.Dotnet.Assembly.1.0.12\lib\net4.8\Runic.Dotnet.Assembly.dll</HintPath>
     </Reference>
     <Reference Include="Runic.FileFormats.PortableExecutable, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Runic.FileFormats.PortableExecutable.1.0.2\lib\net4.8\Runic.FileFormats.PortableExecutable.dll</HintPath>

@@ -58,6 +58,8 @@ namespace Runic.Dotnet
             public Assembly.MetadataTable.CustomAttributeTable CustomAttributeTable { get { return _customAttributeTable; } }
             Assembly.MetadataTable.StandAloneSigTable _standaloneSigTable = new Dotnet.Assembly.MetadataTable.StandAloneSigTable();
             public Assembly.MetadataTable.StandAloneSigTable StandAloneSigTable { get { return _standaloneSigTable; } }
+            Assembly.MetadataTable.NestedClassTable _nestedClassTable = new Dotnet.Assembly.MetadataTable.NestedClassTable();
+            public Assembly.MetadataTable.NestedClassTable NestedClassTable { get { return _nestedClassTable; } }
             uint _size;
             public override uint Size { get { return ((_size + 3) / 4) * 4; } set { _size = value; } }
             byte[] _data;
